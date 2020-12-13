@@ -1,3 +1,2 @@
-###
 ### Yarl - yet another rogulike
 
