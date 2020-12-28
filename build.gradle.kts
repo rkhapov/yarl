@@ -21,6 +21,7 @@ apply<KorgeGradlePlugin>()
 
 korge {
 	id = "urfu.kotlincourse.yarl"
+	supportBox2d()
 	
 	targetJvm()
 //	targetJs()

@@ -1,0 +1,17 @@
+<?xml version="1.8" encoding="UTF-8" ?>
+
+<TextureAtlas imagePath="mer_human_2.png" width="624" height="576">
+    <sprite n="idle-01.png" x="52" y="0" w="52" h="72"/>
+    <sprite n="walk-down-01.png" x="0" y="0" w="52" h="72"/>
+    <sprite n="walk-down-02.png" x="52" y="0" w="52" h="72"/>
+    <sprite n="walk-down-03.png" x="104" y="0" w="52" h="72"/>
+    <sprite n="walk-left-01.png" x="0" y="72" w="52" h="72"/>
+    <sprite n="walk-left-02.png" x="52" y="72" w="52" h="72"/>
+    <sprite n="walk-left-03.png" x="104" y="72" w="52" h="72"/>
+    <sprite n="walk-right-01.png" x="0" y="144" w="52" h="72"/>
+    <sprite n="walk-right-02.png" x="52" y="144" w="52" h="72"/>
+    <sprite n="walk-right-03.png" x="104" y="144" w="52" h="72"/>
+    <sprite n="walk-up-01.png" x="0" y="216" w="52" h="72"/>
+    <sprite n="walk-up-02.png" x="52" y="216" w="52" h="72"/>
+    <sprite n="walk-up-03.png" x="104" y="216" w="52" h="72"/>
+</TextureAtlas>

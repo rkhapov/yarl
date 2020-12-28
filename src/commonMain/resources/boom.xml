@@ -1,0 +1,29 @@
+<?xml version="1.8" encoding="UTF-8" ?>
+
+<TextureAtlas imagePath="boom.png" width="1600" height="1163">
+    <sprite n="boom-01.png" x="0" y="0" w="320" h="232"/>
+    <sprite n="boom-02.png" x="320" y="0" w="320" h="232"/>
+    <sprite n="boom-03.png" x="640" y="0" w="320" h="232"/>
+    <sprite n="boom-04.png" x="960" y="0" w="320" h="232"/>
+    <sprite n="boom-05.png" x="1280" y="0" w="320" h="232"/>
+    <sprite n="boom-06.png" x="0" y="232" w="320" h="232"/>
+    <sprite n="boom-07.png" x="320" y="232" w="320" h="232"/>
+    <sprite n="boom-08.png" x="640" y="232" w="320" h="232"/>
+    <sprite n="boom-09.png" x="960" y="232" w="320" h="232"/>
+    <sprite n="boom-10.png" x="1280" y="232" w="320" h="232"/>
+    <sprite n="boom-11.png" x="0" y="464" w="320" h="232"/>
+    <sprite n="boom-12.png" x="320" y="464" w="320" h="232"/>
+    <sprite n="boom-13.png" x="640" y="464" w="320" h="232"/>
+    <sprite n="boom-14.png" x="960" y="464" w="320" h="232"/>
+    <sprite n="boom-15.png" x="1280" y="464" w="320" h="232"/>
+    <sprite n="boom-16.png" x="0" y="696" w="320" h="232"/>
+    <sprite n="boom-17.png" x="320" y="696" w="320" h="232"/>
+    <sprite n="boom-18.png" x="640" y="696" w="320" h="232"/>
+    <sprite n="boom-19.png" x="960" y="696" w="320" h="232"/>
+    <sprite n="boom-20.png" x="1280" y="696" w="320" h="232"/>
+    <sprite n="boom-21.png" x="0" y="928" w="320" h="232"/>
+    <sprite n="boom-22.png" x="320" y="928" w="320" h="232"/>
+    <sprite n="boom-23.png" x="640" y="928" w="320" h="232"/>
+    <sprite n="boom-24.png" x="960" y="928" w="320" h="232"/>
+    <sprite n="boom-25.png" x="1280" y="928" w="320" h="232"/>
+</TextureAtlas>

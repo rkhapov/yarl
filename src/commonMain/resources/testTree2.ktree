@@ -1,0 +1,7 @@
+<ktree width="1280.0" height="720.0" gridWidth="20" gridHeight="20">
+	<image y="140.0" scaleX="1.6640625" scaleY="1.8125000000000002" width="512.0" height="320.0" sourceFile="FreePlatformerNA/Foreground/CloudsBack.png"/>
+	<image y="140.0" scaleX="1.640625" scaleY="1.8125000000000002" width="512.0" height="320.0" sourceFile="FreePlatformerNA/Foreground/CloudsFront.png"/>
+	<image y="100.0" scaleX="1.7421875" scaleY="1.9375" width="512.0" height="320.0" sourceFile="FreePlatformerNA/Foreground/BGBack.png"/>
+	<image y="100.0" scaleX="1.7421875" scaleY="1.9375" width="512.0" height="320.0" sourceFile="FreePlatformerNA/Foreground/BGFront.png"/>
+	<tiledmapref y="340.0" scaleX="2.5625" scaleY="2.375" sourceFile="FreePlatformerNA/Foreground/forest.tmx"/>
+</ktree>

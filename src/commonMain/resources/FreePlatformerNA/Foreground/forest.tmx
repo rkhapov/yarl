@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="20" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="1">
+ <tileset firstgid="1" source="Tileset.tsx"/>
+ <imagelayer id="9" name="image 1" offsetx="-6.47773" offsety="-122.717">
+  <image source="CloudsBack.png" width="512" height="320"/>
+ </imagelayer>
+ <imagelayer id="10" name="image layer 2" offsetx="1.07962" offsety="-170.22">
+  <image source="CloudsFront.png" width="512" height="320"/>
+ </imagelayer>
+ <imagelayer id="11" name="image 3" offsetx="0.719748" offsety="-159.424">
+  <image source="BGBack.png" width="512" height="320"/>
+ </imagelayer>
+ <imagelayer id="12" name="image 4" offsetx="0.359874" offsety="-160.504">
+  <image source="BGFront.png" width="512" height="320"/>
+ </imagelayer>
+ <imagelayer id="13" name="image 5" offsetx="88.8889" offsety="0">
+  <image source="Trees.png" width="256" height="128"/>
+ </imagelayer>
+ <layer id="1" name="tiles layer 1" width="20" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2,2,2,2,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+24,24,12,12,12,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+12,12,24,15,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+12,24,12,12,23,50,0,0,0,0,18,0,0,0,0,0,0,18,0,0,
+12,12,12,12,2,2,2,2,2,2,2,3,0,0,0,0,1,2,2,2,
+12,12,12,12,12,12,12,12,12,12,12,0,0,0,0,0,21,12,12,12
+</data>
+ </layer>
+ <layer id="6" name="tiles layer 2" width="20" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,57,57,58,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+28,28,28,28,28,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,18,18,18,18,18,49,37,39,39,39,39,40,47,18,18,
+0,0,0,0,27,28,28,28,28,28,28,48,48,48,48,48,48,28,28,28,
+0,0,0,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>
