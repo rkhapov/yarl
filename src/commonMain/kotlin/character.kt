@@ -51,6 +51,7 @@ suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesS
     }
 
     var action = doActionInInterval {  }
+
     fun move() {
         val animationToPlay = animations.random()
         when(animationToPlay) {

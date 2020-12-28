@@ -98,7 +98,7 @@ suspend fun main() = Korge(Korge.Config(module = ConfigModule))
 
 object ConfigModule : Module() {
 	override val size = SizeInt(800, 800)
-	override val mainScene: KClass<out Scene> = VillageLevel::class
+	override val mainScene: KClass<out Scene> = SnowLevel::class
 	override suspend fun AsyncInjector.configure() {
 		mapPrototype { VillageLevel() }
 		mapPrototype { SnowLevel() }
