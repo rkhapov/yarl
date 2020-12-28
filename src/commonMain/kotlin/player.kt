@@ -25,7 +25,11 @@ import org.jbox2d.dynamics.BodyType
 import kotlin.math.abs
 
 class Player(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
+    private var hp: Int = 3
 
+    fun takeDamage() {
+        hp--
+    }
 }
 
 suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapView: TiledMapView, scale: Int = 1): Player {
@@ -46,7 +50,6 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
     val firstAttackDownAnimation = sprites.getSpriteAnimation("first-attack-down")
 
     val player = Player(idleRightAnimation).position(startX, startY).scale(1).registerBodyWithFixture(type=BodyType.DYNAMIC, gravityScale = 0)
-
     val playerRect = solidRect(player.width/2, player.height/2).position(startX, startY)
 
     addChild(player)
@@ -57,8 +60,8 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
     val tileHeight = tiledMapView.tiledMap.tileheight * scale
 
     player.onCollision {
-        if (it is Character && views.input.keys[Key.G]) {
-            it.die()
+        if (it is AggressiveCharacter && views.input.keys[Key.G]) {
+            it.takeDamage()
         }
     }
 

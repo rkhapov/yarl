@@ -11,10 +11,10 @@ class SnowLevel: Scene() {
 
         camera {
             val mapView = tiledMapView(map)
-            player(views, 0, 500, mapView)
+            val player = player(views, 0, 500, mapView)
             character(views, 600, 500, "deer.xml")
             character(views, 50, 300, "deer.xml")
-//            agressiveCharacter(views, 600, 200, )
+            val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player)
         }
     }
 }
