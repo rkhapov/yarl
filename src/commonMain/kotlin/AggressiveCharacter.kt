@@ -1,30 +1,81 @@
-import com.soywiz.kds.Queue
 import com.soywiz.klock.milliseconds
+import com.soywiz.klock.seconds
 import com.soywiz.klock.timesPerSecond
-import com.soywiz.korge.animate.animate
 import com.soywiz.korge.box2d.BoxShape
+import com.soywiz.korge.box2d.body
 import com.soywiz.korge.box2d.registerBodyWithFixture
 import com.soywiz.korge.tiled.TiledMapView
+import com.soywiz.korge.time.timeout
 import com.soywiz.korge.view.*
-import com.soywiz.korim.atlas.readAtlas
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korma.geom.Point
 import com.soywiz.korma.geom.PointInt
-import com.soywiz.korma.geom.shape.buildPath
+import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
 
 class AggressiveCharacter(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     private var hp: Int = 5
-    var attacking = false
+    private var canTakeDamage = true
+    private var lastMoveDirection : Direction = Direction.UP
+
+    var findingPlayer = true
+
+    fun move(direction: Direction) {
+        when (direction) {
+            Direction.RIGHT -> {
+                x += 1.2
+            }
+            Direction.LEFT -> {
+                x -= 1.2
+            }
+            Direction.UP -> {
+                y -= 1.2
+            }
+            Direction.DOWN -> {
+                y += 1.2
+            }
+        }
+
+        lastMoveDirection = direction
+    }
+
     fun die() {
         removeFromParent()
     }
 
     fun takeDamage() {
-        hp--
-        if (hp == 0)
+        if (!canTakeDamage) {
+            return
+        }
+
+        if (--hp == 0) {
             die()
+            return
+        }
+
+        when (lastMoveDirection) {
+            Direction.UP -> {
+                body?.applyForceToCenter(Vec2(0f, +1000f))
+            }
+            Direction.RIGHT -> {
+                body?.applyForceToCenter(Vec2(-1000f, 0f))
+            }
+            Direction.DOWN -> {
+                body?.applyForceToCenter(Vec2(0f, -1000f))
+            }
+            Direction.LEFT -> {
+                body?.applyForceToCenter(Vec2(+100f, 0f))
+            }
+        }
+
+        findingPlayer = false
+        canTakeDamage = false
+
+        timeout(1.seconds) {
+            body?.force?.set(0, 0)
+            findingPlayer = true
+            canTakeDamage = true
+        }
     }
 }
 
@@ -51,15 +102,11 @@ suspend fun Container.aggressiveCharacter(
         SpriteAnimation(spriteMap = attack, spriteWidth = 37, spriteHeight = 41, columns = 8, rows = 1)
 
     val character = AggressiveCharacter(walkLeftAnimation).position(startX, startY)
-        .registerBodyWithFixture(type = BodyType.STATIC, gravityScale = 0, shape = BoxShape(2f, 2f))
+        .registerBodyWithFixture(type = BodyType.DYNAMIC, gravityScale = 0, shape = BoxShape(2f, 2f))
+
     addChild(character)
 
     character.playAnimationLooped(attackAnimation, spriteDisplayTime = 200.milliseconds)
-
-    onCollision {
-        if (it is Player)
-            it.takeDamage()
-    }
 
     addFixedUpdater(60.timesPerSecond) {
         val collisionLayer = tiledMapView.tiledMap.data.tileLayers.first()
@@ -115,22 +162,8 @@ suspend fun Container.aggressiveCharacter(
         val playerTileY = (player.y / tileHeight).toInt()
         val path = findPath(myTileX, myTileY, playerTileX, playerTileY)
 
-        if (path.isNotEmpty()) {
-            when (path.first()) {
-                Direction.RIGHT -> {
-                    character.x++
-                }
-                Direction.LEFT -> {
-                    character.x--
-                }
-                Direction.UP -> {
-                    character.y--
-                }
-                Direction.DOWN -> {
-                    character.y++
-                }
-            }
-
+        if (path.isNotEmpty() && character.findingPlayer) {
+            character.move(path.first())
         }
     }
 
