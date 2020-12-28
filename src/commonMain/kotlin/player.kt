@@ -41,7 +41,7 @@ class Player(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     }
 
     fun takeDamage() {
-        hp--
+        println("player hp is ${--hp}")
     }
 }
 

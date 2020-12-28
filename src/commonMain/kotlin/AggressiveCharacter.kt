@@ -13,10 +13,16 @@ import com.soywiz.korma.geom.PointInt
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
 
-class AggressiveCharacter(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
+class AggressiveCharacter(
+    idleAnimation: SpriteAnimation,
+    private val attackAnimation: SpriteAnimation,
+    private val deathAnimation: SpriteAnimation
+) :
+    Sprite(idleAnimation) {
     private var hp: Int = 5
     private var canTakeDamage = true
-    private var lastMoveDirection : Direction = Direction.UP
+    private var lastMoveDirection: Direction = Direction.UP
+    private var isAttacking = false
 
     var findingPlayer = true
 
@@ -40,7 +46,11 @@ class AggressiveCharacter(idleAnimation: SpriteAnimation) : Sprite(idleAnimation
     }
 
     fun die() {
-        removeFromParent()
+        playAnimation(deathAnimation, spriteDisplayTime = 200.milliseconds, reversed = true)
+
+        onAnimationCompleted {
+            removeFromParent()
+        }
     }
 
     fun takeDamage() {
@@ -77,6 +87,27 @@ class AggressiveCharacter(idleAnimation: SpriteAnimation) : Sprite(idleAnimation
             canTakeDamage = true
         }
     }
+
+    fun doAttack(player: Player) {
+        if (isAttacking) {
+            return
+        }
+
+        isAttacking = true
+        findingPlayer = false
+
+        stopAnimation()
+        playAnimation(attackAnimation, spriteDisplayTime = 50.milliseconds)
+
+        onAnimationCompleted {
+            findingPlayer = true
+            isAttacking = false
+
+            if (player.collidesWith(this)) {
+                player.takeDamage()
+            }
+        }
+    }
 }
 
 suspend fun Container.aggressiveCharacter(
@@ -89,29 +120,57 @@ suspend fun Container.aggressiveCharacter(
     tileWidth: Int,
     tileHeight: Int
 ): AggressiveCharacter {
-//    val sprites = resourcesVfs[spriteSrc].readAtlas()
+    val walkFrontAnimation =
+        SpriteAnimation(
+            spriteMap = resourcesVfs["slime1_front.png"].readBitmap(),
+            spriteWidth = 16,
+            spriteHeight = 16,
+            columns = 4,
+            rows = 1
+        )
 
-    val walkLeft = resourcesVfs["slime1_side.png"].readBitmap()
-    val walkLeftAnimation =
-        SpriteAnimation(spriteMap = walkLeft, spriteWidth = 16, spriteHeight = 16, columns = 4, rows = 1)
-    val walkUp = resourcesVfs["slime1_back.png"].readBitmap()
-    val walkUpAnimation =
-        SpriteAnimation(spriteMap = walkUp, spriteWidth = 16, spriteHeight = 16, columns = 4, rows = 1)
-    val attack = resourcesVfs["slime_explode.png"].readBitmap()
+    val deathAnimation =
+        SpriteAnimation(
+            spriteMap = resourcesVfs["slime1_back.png"].readBitmap(),
+            spriteWidth = 16,
+            spriteHeight = 16,
+            columns = 4,
+            rows = 1
+        )
+
     val attackAnimation =
-        SpriteAnimation(spriteMap = attack, spriteWidth = 37, spriteHeight = 41, columns = 8, rows = 1)
+        SpriteAnimation(
+            spriteMap = resourcesVfs["slime_explode.png"].readBitmap(),
+            spriteWidth = 37,
+            spriteHeight = 41,
+            columns = 8,
+            rows = 1
+        )
 
-    val character = AggressiveCharacter(walkLeftAnimation).position(startX, startY)
+    val character = AggressiveCharacter(walkFrontAnimation, attackAnimation, deathAnimation).position(startX, startY)
         .registerBodyWithFixture(type = BodyType.DYNAMIC, gravityScale = 0, shape = BoxShape(2f, 2f))
 
     addChild(character)
 
-    character.playAnimationLooped(attackAnimation, spriteDisplayTime = 200.milliseconds)
+    character.playAnimationLooped(walkFrontAnimation, spriteDisplayTime = 200.milliseconds)
+
+    character.onCollision {
+        if (it is Player && !it.isInAttackState()) {
+            character.doAttack(it)
+        }
+    }
 
     addFixedUpdater(60.timesPerSecond) {
         val collisionLayer = tiledMapView.tiledMap.data.tileLayers.first()
 
-        fun tryGo(x: Int, y: Int, currentPath : List<Direction>, direction: Direction, queue: MutableList<Pair<List<Direction>, PointInt>>, visited: MutableSet<PointInt>) {
+        fun tryGo(
+            x: Int,
+            y: Int,
+            currentPath: List<Direction>,
+            direction: Direction,
+            queue: MutableList<Pair<List<Direction>, PointInt>>,
+            visited: MutableSet<PointInt>
+        ) {
             if (x < 0 || y < 0 || x >= tiledMapView.width || y >= tiledMapView.height) {
                 return
             }
