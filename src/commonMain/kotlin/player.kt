@@ -1,34 +1,18 @@
 import com.soywiz.klock.milliseconds
-import com.soywiz.klock.seconds
 import com.soywiz.klock.timesPerSecond
 import com.soywiz.korev.Key
-import com.soywiz.korge.animate.play
-import com.soywiz.korge.box2d.BoxShape
 import com.soywiz.korge.box2d.body
 import com.soywiz.korge.box2d.registerBodyWithFixture
-import com.soywiz.korge.input.onClick
-import com.soywiz.korge.resources.resourceTtfFont
 import com.soywiz.korge.tiled.TiledMapView
-import com.soywiz.korge.time.delay
 import com.soywiz.korge.view.*
-import com.soywiz.korge.view.Camera
-import com.soywiz.korge.view.anchor
-import com.soywiz.korge.view.camera.*
-import com.soywiz.korge.view.tween.moveBy
-import com.soywiz.korge.view.tween.moveTo
-import com.soywiz.korim.atlas.Atlas
 import com.soywiz.korim.atlas.readAtlas
-import com.soywiz.korim.color.Colors
 import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korma.geom.degrees
-import com.soywiz.korte.dynamic.Dynamic2.toDouble
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
-import kotlin.math.abs
 
 class Player(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     private var hp: Int = 3
-    private var inAttack : Boolean = false;
+    private var inAttack: Boolean = false;
 
     fun doAttackState() {
         inAttack = true
@@ -38,16 +22,21 @@ class Player(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
         inAttack = false
     }
 
-    fun isInAttackState() : Boolean {
+    fun isInAttackState(): Boolean {
         return inAttack
     }
 
     fun takeDamage() {
-//        println("player hp is ${--hp}")
     }
 }
 
-suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapView: TiledMapView, scale: Int = 1): Player {
+suspend fun Container.player(
+    views: Views,
+    startX: Int,
+    startY: Int,
+    tiledMapView: TiledMapView,
+    scale: Int = 1
+): Player {
     var direction = Direction.RIGHT
     val sprites = resourcesVfs["skeleton_animations.xml"].readAtlas()
 
@@ -64,8 +53,8 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
     val firstAttackLeftAnimation = sprites.getSpriteAnimation("first-attack-left")
     val firstAttackDownAnimation = sprites.getSpriteAnimation("first-attack-down")
 
-    val player = Player(idleRightAnimation).position(startX, startY).scale(1).registerBodyWithFixture(type=BodyType.DYNAMIC, gravityScale = 0)
-    val playerRect = solidRect(player.width/2, player.height/2).position(startX, startY)
+    val player = Player(idleRightAnimation).position(startX, startY).scale(1)
+        .registerBodyWithFixture(type = BodyType.DYNAMIC, gravityScale = 0)
 
     addChild(player)
     player.playAnimationLooped(idleRightAnimation, spriteDisplayTime = 200.milliseconds)
@@ -79,15 +68,15 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
             it.takeDamage(direction)
         }
         if (it is StaticObject && views.input.keys[Key.F]) {
-            when(direction) {
-                Direction.LEFT -> it.position(player.x, player.y + player.height/2 )
-                Direction.UP -> it.position(player.x + player.width/2, player.y + player.height/2)
-                Direction.RIGHT -> it.position(player.x + player.height/2, player.y + player.height/2)
-                Direction.DOWN -> it.position(player.x + player.width/2, player.y + player.height/2 )
+            when (direction) {
+                Direction.LEFT -> it.position(player.x, player.y + player.height / 2)
+                Direction.UP -> it.position(player.x + player.width / 2, player.y + player.height / 2)
+                Direction.RIGHT -> it.position(player.x + player.height / 2, player.y + player.height / 2)
+                Direction.DOWN -> it.position(player.x + player.width / 2, player.y + player.height / 2)
             }
         }
         if (it is StaticObject && views.input.keys[Key.G]) {
-            when(direction) {
+            when (direction) {
                 Direction.LEFT -> it.body?.applyForceToCenter(Vec2(-30f, 0f))
                 Direction.RIGHT -> it.body?.applyForceToCenter(Vec2(30f, 0f))
                 Direction.DOWN -> it.body?.applyForceToCenter(Vec2(0f, 30f))
@@ -100,34 +89,12 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
         }
     }
 
-//    val cameraSpeed = 4
-//    val cameraCenter = 400
-//    val screenSize = 800
     addFixedUpdater(60.timesPerSecond) {
-//        val target = cameraCenter - (player.x + player.width)
-//        if (x< target) {
-//            x += cameraSpeed
-//            if ( x > target) x = target
-//        } else if ( x > target) {
-//            x -= cameraSpeed
-//            if ( x < target) x = target
-//        }
-//
-//        if(x>0) x = 0.0
 
-//		if(x < - (tiledMapWidth - screenSize)) x = - (tiledMapWidth - screenSize)
-
-        if (views.input.keys[Key.D]) {
-            player.playAnimation(walkRightAnimation)
-            if (!boundsChecker.isBlockingObject(player.x + player.width/2 + 1, player.y + player.height/2, tileWidth, tileHeight)) {
-                playerRect.position(player.x + player.width/2, player.y + player.height/2)
-                player.x++
-            }
-            direction = Direction.RIGHT
-        }
         if (views.input.keys.justReleased(Key.D) || views.input.keys.justReleased(Key.W)
-            || views.input.keys.justReleased(Key.S) || views.input.keys.justReleased(Key.A)) {
-            val animationToPlay = when(direction) {
+            || views.input.keys.justReleased(Key.S) || views.input.keys.justReleased(Key.A)
+        ) {
+            val animationToPlay = when (direction) {
                 Direction.RIGHT -> idleRightAnimation
                 Direction.UP -> idleUpAnimation
                 Direction.LEFT -> idleLeftAnimation
@@ -135,30 +102,69 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
             }
             player.playAnimationLooped(animationToPlay)
         }
+
+
+        if (views.input.keys[Key.D]) {
+            player.playAnimation(walkRightAnimation)
+            if (!boundsChecker.isPlayerBlocked(
+                    player.x,
+                    player.y,
+                    player.width / 4,
+                    player.height / 2,
+                    tileWidth,
+                    tileHeight
+                )
+            ) {
+                player.x++
+            }
+            direction = Direction.RIGHT
+        }
+
         if (views.input.keys[Key.W]) {
             player.playAnimation(walkUpAnimation)
-            if (!boundsChecker.isBlockingObject(player.x + player.width/2, player.y - 1, tileWidth, tileHeight)) {
-                playerRect.position(player.x + player.width/2, player.y)
+            if (!boundsChecker.isPlayerBlocked(
+                    player.x,
+                    player.y,
+                    0.0,
+                    +(player.height / 4),
+                    tileWidth,
+                    tileHeight
+                )) {
                 player.y--
             }
             direction = Direction.UP
         }
+
         if (views.input.keys[Key.S]) {
             player.playAnimation(walkDownAnimation)
-            if (!boundsChecker.isBlockingObject(player.x, player.y + player.height/2 + 1, tileWidth, tileHeight)) {
-                playerRect.position(player.x, player.y + player.height/2)
+            if (!boundsChecker.isPlayerBlocked(
+                    player.x,
+                    player.y,
+                    0.0,
+                    player.height / 2 + 1,
+                    tileWidth,
+                    tileHeight
+                )) {
                 player.y++
             }
             direction = Direction.DOWN
         }
+
         if (views.input.keys[Key.A]) {
             player.playAnimation(walkLeftAnimation)
-            if (!boundsChecker.isBlockingObject(player.x - 1, player.y + player.height/2, tileWidth, tileHeight)) {
-                playerRect.position(player.x, player.y + player.height/2)
+            if (!boundsChecker.isPlayerBlocked(
+                    player.x,
+                    player.y,
+                    -1.0,
+                    player.height / 2,
+                    tileWidth,
+                    tileHeight
+                )) {
                 player.x--
             }
             direction = Direction.LEFT
         }
+
         if (views.input.keys[Key.G]) {
             player.doAttackState()
 

@@ -41,16 +41,16 @@
     <sprite n="first-attack-right-02.png" x="1684" y="512" w="128" h="128"/>
     <sprite n="first-attack-right-03.png" x="1812" y="512" w="128" h="128"/>
     <sprite n="first-attack-right-04.png" x="1940" y="512" w="128" h="128"/>
-    <sprite n="first-attack-left-01.png" x="1556" y="0" w="128" h="128"/>
-    <sprite n="first-attack-left-02.png" x="1684" y="0" w="128" h="128"/>
-    <sprite n="first-attack-left-03.png" x="1812" y="0" w="128" h="128"/>
-    <sprite n="first-attack-left-04.png" x="1940" y="0" w="128" h="128"/>
+    <sprite n="first-attack-left-01.png" x="1530" y="0" w="128" h="128"/>
+    <sprite n="first-attack-left-02.png" x="1662" y="0" w="128" h="128"/>
+    <sprite n="first-attack-left-03.png" x="1790" y="0" w="128" h="128"/>
+    <sprite n="first-attack-left-04.png" x="1918" y="0" w="128" h="128"/>
     <sprite n="first-attack-up-01.png" x="1556" y="256" w="128" h="128"/>
     <sprite n="first-attack-up-02.png" x="1684" y="256" w="128" h="128"/>
     <sprite n="first-attack-up-03.png" x="1812" y="256" w="128" h="128"/>
     <sprite n="first-attack-up-04.png" x="1940" y="256" w="128" h="128"/>
-    <sprite n="first-attack-down-01.png" x="1556" y="768" w="128" h="128"/>
-    <sprite n="first-attack-down-02.png" x="1684" y="768" w="128" h="128"/>
-    <sprite n="first-attack-down-03.png" x="1812" y="768" w="128" h="128"/>
-    <sprite n="first-attack-down-04.png" x="1940" y="768" w="128" h="128"/>
+    <sprite n="first-attack-down-01.png" x="1526" y="768" w="128" h="128"/>
+    <sprite n="first-attack-down-02.png" x="1654" y="768" w="128" h="128"/>
+    <sprite n="first-attack-down-03.png" x="1782" y="768" w="128" h="128"/>
+    <sprite n="first-attack-down-04.png" x="1910" y="768" w="128" h="128"/>
 </TextureAtlas>
