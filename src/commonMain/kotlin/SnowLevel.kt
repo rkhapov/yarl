@@ -19,9 +19,6 @@ class SnowLevel: Scene() {
     var enemiesDefeated = false
     override suspend fun Container.sceneInit() {
         val map = resourcesVfs["/snow_level/snow.tmx"].readTiledMap()
-        val musicChannel = playMusic("Jingle Bells1.mp3")
-        musicChannel.pause()
-        musicChannel.resume()
 
         val rectDoor1 = solidRect(96, 32).position(128, 224)
         val rectDoor2 = solidRect(96, 32).position(352, 160)
@@ -139,6 +136,9 @@ class SnowLevel: Scene() {
                 elf3.move()
                 isFourthTaskDone = true
             }
+
+            if (isFirstTaskDone && isSecondTaskDone && isThirdTaskDone && isFourthTaskDone)
+                text("Чтобы продолжить кликните левой кнопкой мыши", textSize = 30.0, color = Colors.BLACK).centerOnStage()
         }
     }
 }
