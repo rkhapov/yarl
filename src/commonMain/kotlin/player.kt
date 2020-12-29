@@ -76,7 +76,7 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
 
     player.onCollision {
         if (it is AggressiveCharacter && views.input.keys[Key.G]) {
-            it.takeDamage()
+            it.takeDamage(direction)
         }
         if (it is StaticObject && views.input.keys[Key.F]) {
             when(direction) {
