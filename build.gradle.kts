@@ -24,8 +24,8 @@ korge {
 	supportBox2d()
 	
 	targetJvm()
-//	targetJs()
+	targetJs()
 //	targetDesktop()
 //	targetIos()
-//	targetAndroidIndirect() // targetAndroidDirect()
+	targetAndroidIndirect() // targetAndroidDirect()
 }
