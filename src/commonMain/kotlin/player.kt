@@ -55,7 +55,6 @@ suspend fun Container.player(
 
     val player = Player(idleRightAnimation).position(startX, startY).scale(1)
         .registerBodyWithFixture(type = BodyType.DYNAMIC, gravityScale = 0)
-    val playerRect = solidRect(player.width / 2, player.height / 2).position(startX, startY)
 
     addChild(player)
     player.playAnimationLooped(idleRightAnimation, spriteDisplayTime = 200.milliseconds)
@@ -116,7 +115,6 @@ suspend fun Container.player(
                     tileHeight
                 )
             ) {
-                playerRect.position(player.x + player.width / 4, player.y + player.height / 2)
                 player.x++
             }
             direction = Direction.RIGHT
@@ -132,7 +130,6 @@ suspend fun Container.player(
                     tileWidth,
                     tileHeight
                 )) {
-                playerRect.position(player.x, player.y + player.height / 4)
                 player.y--
             }
             direction = Direction.UP
@@ -148,7 +145,6 @@ suspend fun Container.player(
                     tileWidth,
                     tileHeight
                 )) {
-                playerRect.position(player.x, player.y + player.height / 2)
                 player.y++
             }
             direction = Direction.DOWN
@@ -164,7 +160,6 @@ suspend fun Container.player(
                     tileWidth,
                     tileHeight
                 )) {
-                playerRect.position(player.x, player.y + player.height / 2)
                 player.x--
             }
             direction = Direction.LEFT
