@@ -14,6 +14,7 @@ import com.soywiz.korma.geom.PointInt
 import com.soywiz.korte.dynamic.Dynamic2.toInt
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
+import kotlin.random.Random
 
 class AggressiveCharacter(
     idleAnimation: SpriteAnimation,
@@ -186,18 +187,13 @@ suspend fun Container.aggressiveCharacter(
                 return
             }
 
-//            for (aggressiveCharacter in otherAggressiveCharacters) {
-//                if (aggressiveCharacter.collidesWith(character))
-//                    return
-//            }
-
             val newPoint = PointInt(x, y)
 
             if (visited.contains(newPoint)) {
                 return
             }
 
-            if (collisionLayer.map[x, y].value != 0) {
+            if (collisionLayer.map[x, y].value != 0 || Random.nextDouble() > 0.8) {
                 return
             }
 
