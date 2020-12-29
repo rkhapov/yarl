@@ -4,6 +4,7 @@ import com.soywiz.klock.timesPerSecond
 import com.soywiz.korev.Key
 import com.soywiz.korge.animate.play
 import com.soywiz.korge.box2d.BoxShape
+import com.soywiz.korge.box2d.body
 import com.soywiz.korge.box2d.registerBodyWithFixture
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.resources.resourceTtfFont
@@ -21,6 +22,7 @@ import com.soywiz.korim.color.Colors
 import com.soywiz.korio.file.std.resourcesVfs
 import com.soywiz.korma.geom.degrees
 import com.soywiz.korte.dynamic.Dynamic2.toDouble
+import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
 import kotlin.math.abs
 
@@ -62,6 +64,22 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
     player.onCollision {
         if (it is AggressiveCharacter && views.input.keys[Key.G]) {
             it.takeDamage()
+        }
+        if (it is StaticObject && views.input.keys[Key.F]) {
+            when(direction) {
+                Direction.LEFT -> it.position(player.x, player.y + player.height/2 )
+                Direction.UP -> it.position(player.x + player.width/2, player.y + player.height/2)
+                Direction.RIGHT -> it.position(player.x + player.height/2, player.y + player.height/2)
+                Direction.DOWN -> it.position(player.x + player.width/2, player.y + player.height/2 )
+            }
+        }
+        if (it is StaticObject && views.input.keys[Key.G]) {
+            when(direction) {
+                Direction.LEFT -> it.body?.applyForceToCenter(Vec2(-30f, 0f))
+                Direction.RIGHT -> it.body?.applyForceToCenter(Vec2(30f, 0f))
+                Direction.DOWN -> it.body?.applyForceToCenter(Vec2(0f, 30f))
+                Direction.UP -> it.body?.applyForceToCenter(Vec2(0f, -30f))
+            }
         }
     }
 

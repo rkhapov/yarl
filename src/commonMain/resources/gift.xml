@@ -1,0 +1,5 @@
+<?xml version="1.8" encoding="UTF-8" ?>
+
+<TextureAtlas imagePath="christmaspresents_2.png" width="384" height="512">
+    <sprite n="idle-01.png" x="34" y="34" w="28" h="28"/>
+</TextureAtlas>
