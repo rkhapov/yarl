@@ -14,6 +14,8 @@ class Player(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     private var hp: Int = 3
     private var inAttack: Boolean = false;
 
+    var canMove = true
+
     fun doAttackState() {
         inAttack = true
     }
@@ -113,7 +115,7 @@ suspend fun Container.player(
                     player.height / 2,
                     tileWidth,
                     tileHeight
-                )
+                ) && player.canMove
             ) {
                 player.x++
             }
@@ -129,7 +131,7 @@ suspend fun Container.player(
                     +(player.height / 4),
                     tileWidth,
                     tileHeight
-                )
+                ) && player.canMove
             ) {
                 player.y--
             }
@@ -145,7 +147,7 @@ suspend fun Container.player(
                     player.height / 2 + 1,
                     tileWidth,
                     tileHeight
-                )
+                ) && player.canMove
             ) {
                 player.y++
             }
@@ -161,7 +163,7 @@ suspend fun Container.player(
                     player.height / 2,
                     tileWidth,
                     tileHeight
-                )
+                ) && player.canMove
             ) {
                 player.x--
             }

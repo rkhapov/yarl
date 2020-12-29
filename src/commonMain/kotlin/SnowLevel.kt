@@ -36,7 +36,7 @@ class SnowLevel : Scene() {
 
         character(views, 500, 500, "deer.xml", "Я олень, я не умею говорить!", Colors.BLACK)
         character(views, 50, 300, "deer.xml", "Я олень, я не умею говорить!", Colors.BLACK)
-        val player = player(views, 0, 500, mapView)
+        val player = player(views, 10, 650, mapView)
         val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player, mapView, 32, 32)
         aggressiveCharacter(views, 400, 200, "src", player, mapView, 32, 32)
         aggressiveCharacter(views, 300, 200, "src", player, mapView, 32, 32)
@@ -58,6 +58,8 @@ class SnowLevel : Scene() {
         val secondDoorBlockingObjects = listOf<View>(secondDoorBlock1, secondDoorBlock2, secondDoorBlock3)
         val thirdDoorBlockingObjects = listOf<View>(thirdDoorBlock1, thirdDoorBlock2, thirdDoorBlock3)
 
+        player.canMove = false
+
         var playerText = text("Что это?", textSize = 16.0, color = Colors.BLACK).position(player.pos)
         timeout(3.seconds) {
             playerText.text = "Я умер?"
@@ -73,6 +75,7 @@ class SnowLevel : Scene() {
                                 playerText.text = "Я думаю, стоит от них избавиться"
                                 timeout(4.seconds) {
                                     playerText.visible(false)
+                                    player.canMove = true
                                 }
                             }
                         }
