@@ -35,11 +35,11 @@ class VillageLevel : Scene() {
         camera {
             val mapView = tiledMapView(map)
             mapView.scale(2)
-            character(views, 400, 200, "test_animations.xml")
-            character(views, 300, 200, "test_animations.xml")
-            character(views, 200, 300, "test_animations.xml")
-            character(views, 350, 400, "test_animations.xml")
-            character(views, 150, 200, "test_animations.xml")
+            character(views, 400, 200, "test_animations.xml", "Отличная погодка сегодня")
+            character(views, 300, 200, "test_animations.xml", "Опять убирать хлев...")
+            character(views, 200, 300, "test_animations.xml", "Пойду нажрусь в баре")
+            character(views, 350, 400, "test_animations.xml", "Пам-парам")
+            character(views, 150, 200, "test_animations.xml", "БЛЭК ЛАЙВС МЭТТА")
             player = player(views, 0,400, mapView, scale=2)
 
             val boom = sprite(boomAnimation).visible(false).scale(2.5).centerOnStage()

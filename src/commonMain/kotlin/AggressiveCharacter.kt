@@ -9,7 +9,9 @@ import com.soywiz.korge.time.timeout
 import com.soywiz.korge.view.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.file.std.resourcesVfs
+import com.soywiz.korma.geom.Point
 import com.soywiz.korma.geom.PointInt
+import com.soywiz.korte.dynamic.Dynamic2.toInt
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
 
@@ -160,6 +162,13 @@ suspend fun Container.aggressiveCharacter(
         }
     }
 
+    val otherAggressiveCharacters = ArrayList<View>()
+    forEachChildren {
+        if (it is AggressiveCharacter && it != character) {
+            otherAggressiveCharacters.add(it)
+        }
+    }
+
     addFixedUpdater(60.timesPerSecond) {
         val collisionLayer = tiledMapView.tiledMap.data.tileLayers.first()
 
@@ -174,6 +183,11 @@ suspend fun Container.aggressiveCharacter(
             if (x < 0 || y < 0 || x >= tiledMapView.width || y >= tiledMapView.height) {
                 return
             }
+
+//            for (aggressiveCharacter in otherAggressiveCharacters) {
+//                if (aggressiveCharacter.collidesWith(character))
+//                    return
+//            }
 
             val newPoint = PointInt(x, y)
 
