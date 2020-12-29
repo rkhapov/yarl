@@ -89,29 +89,24 @@ class SnowLevel: Scene() {
             if (children.intersect(aggressiveCharacters).isEmpty()) {
                 playerText.text = "Теперь нужно расчистить завалы у домов"
                 playerText.visible(true)
-                timeout(3.seconds) {
-                    playerText.visible(false)
-                }
             }
 
             playerText.position(player.pos)
 
             if (!rectDoor1.collidesWith(firstDoorBlockingObjects)) {
                 playerText.text = "Этот завал расчищен"
-                playerText.visible(true)
-                timeout(2.seconds) {
-                    playerText.visible(false)
-                }
                 jesus.visible = true
                 jesus.move()
             }
 
             if (!rectDoor2.collidesWith(secondDoorBlockingObjects)) {
+                playerText.text = "Санта свободен!"
                 santa.visible = true
                 santa.move()
             }
 
             if (!rectDoor3.collidesWith(thirdDoorBlockingObjects)) {
+                playerText.text = "Теперь жители этого дома свободны"
                 elf1.visible = true
                 elf1.move()
 
