@@ -14,6 +14,7 @@ import com.soywiz.korge.view.*
 import com.soywiz.korge.view.tween.moveBy
 import com.soywiz.korim.atlas.Atlas
 import com.soywiz.korim.atlas.readAtlas
+import com.soywiz.korim.color.Colors
 import com.soywiz.korio.async.launch
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
@@ -25,12 +26,39 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.startCoroutine
 
 class Character(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
+    private var canMove: Boolean = true
+    private var talk: Boolean = false
+
     fun die() {
         removeFromParent()
     }
+
+    fun move() {
+        canMove = true
+    }
+
+    fun stop() {
+        canMove = false
+    }
+
+    fun canMove(): Boolean {
+        return canMove
+    }
+
+    fun isTalking(): Boolean {
+        return talk
+    }
+
+    fun startTalking() {
+        talk = true
+    }
+
+    fun stopTalking() {
+        talk = false
+    }
 }
 
-suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesSrc: String): Character {
+suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesSrc: String, text: String): Character {
     val sprites = resourcesVfs[spritesSrc].readAtlas()
 
     val idleAnimation = sprites.getSpriteAnimation("idle")
@@ -44,6 +72,19 @@ suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesS
     val character = Character(idleAnimation).position(startX, startY).registerBodyWithFixture(type= BodyType.STATIC, gravityScale = 0, shape = BoxShape(2f, 2f))
     addChild(character)
 
+    val characterPhrase = text(text, textSize = 16.0, color = Colors.BLACK).visible(false)
+
+    characterPhrase.addUpdater {
+        position(character.pos)
+        if (character.isTalking()) {
+            characterPhrase.visible(true)
+            timeout(3.seconds) {
+                characterPhrase.visible(false)
+                character.stopTalking()
+            }
+        }
+    }
+
     fun doActionInInterval(action: () -> Unit): Closeable {
         val timer = timers.interval(200.milliseconds) {action()}
 
@@ -53,31 +94,33 @@ suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesS
     var action = doActionInInterval {  }
 
     fun move() {
-        val animationToPlay = animations.random()
-        when(animationToPlay) {
-            idleAnimation -> {
-                action.close()
-                character.playAnimationLooped(idleAnimation)
-            }
-            walkRightAnimation -> {
-                action.close()
-                character.playAnimationLooped(walkRightAnimation, spriteDisplayTime = 200.milliseconds)
-                action = doActionInInterval { character.x++ }
-            }
-            walkLeftAnimation -> {
-                action.close()
-                character.playAnimationLooped(walkLeftAnimation, spriteDisplayTime = 200.milliseconds)
-                action = doActionInInterval { character.x-- }
-            }
-            walkUpAnimation -> {
-                action.close()
-                character.playAnimationLooped(walkUpAnimation, spriteDisplayTime = 200.milliseconds)
-                action = doActionInInterval { character.y-- }
-            }
-            walkDownAnimation -> {
-                action.close()
-                character.playAnimationLooped(walkDownAnimation, spriteDisplayTime = 200.milliseconds)
-                action = doActionInInterval { character.y++ }
+        if (character.canMove()) {
+            val animationToPlay = animations.random()
+            when(animationToPlay) {
+                idleAnimation -> {
+                    action.close()
+                    character.playAnimationLooped(idleAnimation)
+                }
+                walkRightAnimation -> {
+                    action.close()
+                    character.playAnimationLooped(walkRightAnimation, spriteDisplayTime = 200.milliseconds)
+                    action = doActionInInterval { character.x++ }
+                }
+                walkLeftAnimation -> {
+                    action.close()
+                    character.playAnimationLooped(walkLeftAnimation, spriteDisplayTime = 200.milliseconds)
+                    action = doActionInInterval { character.x-- }
+                }
+                walkUpAnimation -> {
+                    action.close()
+                    character.playAnimationLooped(walkUpAnimation, spriteDisplayTime = 200.milliseconds)
+                    action = doActionInInterval { character.y-- }
+                }
+                walkDownAnimation -> {
+                    action.close()
+                    character.playAnimationLooped(walkDownAnimation, spriteDisplayTime = 200.milliseconds)
+                    action = doActionInInterval { character.y++ }
+                }
             }
         }
     }

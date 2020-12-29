@@ -43,7 +43,7 @@ class Player(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     }
 
     fun takeDamage() {
-        println("player hp is ${--hp}")
+//        println("player hp is ${--hp}")
     }
 }
 
@@ -93,6 +93,10 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
                 Direction.DOWN -> it.body?.applyForceToCenter(Vec2(0f, 30f))
                 Direction.UP -> it.body?.applyForceToCenter(Vec2(0f, -30f))
             }
+        }
+
+        if (it is Character && views.input.keys[Key.E]) {
+            it.startTalking()
         }
     }
 
