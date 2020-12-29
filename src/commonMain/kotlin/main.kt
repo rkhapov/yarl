@@ -102,5 +102,6 @@ object ConfigModule : Module() {
 	override suspend fun AsyncInjector.configure() {
 		mapPrototype { VillageLevel() }
 		mapPrototype { SnowLevel() }
+		mapPrototype { FinalLevel() }
 	}
 }

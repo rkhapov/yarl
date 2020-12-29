@@ -1,5 +1,11 @@
+import com.soywiz.klock.infiniteTimes
 import com.soywiz.klock.seconds
+import com.soywiz.korau.sound.PlaybackTimes
+import com.soywiz.korau.sound.await
+import com.soywiz.korau.sound.readMusic
+import com.soywiz.korau.sound.readSound
 import com.soywiz.korge.box2d.registerBodyWithFixture
+import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.tiled.readTiledMap
 import com.soywiz.korge.tiled.tiledMapView
@@ -13,17 +19,20 @@ class SnowLevel: Scene() {
     var enemiesDefeated = false
     override suspend fun Container.sceneInit() {
         val map = resourcesVfs["/snow_level/snow.tmx"].readTiledMap()
+        val musicChannel = playMusic("Jingle Bells1.mp3")
+        musicChannel.pause()
+        musicChannel.resume()
 
         val rectDoor1 = solidRect(96, 32).position(128, 224)
         val rectDoor2 = solidRect(96, 32).position(352, 160)
         val rectDoor3 = solidRect(96, 32).position(608, 128)
         val mapView = tiledMapView(map)
 
-        val jesus = character(views, 160, 224, "jesus.xml","Я родился").visible(false)
-        val santa = character(views, 384, 160, "santa.xml", "Йо-хо-хо, спасибо за спасение").visible(false)
-        val elf1 = character(views, 608, 128, "elf.xml", "Гномье бурчанье 1").visible(false)
-        val elf2 = character(views, 640, 128, "elf.xml", "Гномье бурчанье 2").visible(false)
-        val elf3 = character(views, 672, 128, "elf.xml", "Гномье бурчанье 3").visible(false)
+        val jesus = character(views, 160, 224, "jesus.xml","Я родился", Colors.BLACK).visible(false)
+        val santa = character(views, 384, 160, "santa.xml", "Йо-хо-хо, спасибо за спасение", Colors.BLACK).visible(false)
+        val elf1 = character(views, 608, 128, "elf.xml", "Гномье бурчанье 1", Colors.BLACK).visible(false)
+        val elf2 = character(views, 640, 128, "elf.xml", "Гномье бурчанье 2", Colors.BLACK).visible(false)
+        val elf3 = character(views, 672, 128, "elf.xml", "Гномье бурчанье 3", Colors.BLACK).visible(false)
 
         jesus.stop()
         santa.stop()
@@ -31,8 +40,8 @@ class SnowLevel: Scene() {
         elf2.stop()
         elf3.stop()
 
-        character(views, 500, 500, "deer.xml", "Я олень, я не умею говорить!")
-        character(views, 50, 300, "deer.xml", "Я олень, я не умею говорить!")
+        character(views, 500, 500, "deer.xml", "Я олень, я не умею говорить!", Colors.BLACK)
+        character(views, 50, 300, "deer.xml", "Я олень, я не умею говорить!", Colors.BLACK)
         val player = player(views, 0, 500, mapView)
         val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player, mapView, 32, 32)
         aggressiveCharacter(views, 400, 200, "src", player, mapView, 32, 32)
@@ -85,10 +94,21 @@ class SnowLevel: Scene() {
             }
         }
 
+        var isFirstTaskDone = false
+        var isSecondTaskDone = false
+        var isThirdTaskDone = false
+        var isFourthTaskDone = false
+
+        onClick {
+            if (isFirstTaskDone && isSecondTaskDone && isThirdTaskDone && isFourthTaskDone)
+                    sceneContainer.changeTo<FinalLevel>()
+        }
+
         addUpdater {
             if (children.intersect(aggressiveCharacters).isEmpty()) {
                 playerText.text = "Теперь нужно расчистить завалы у домов"
                 playerText.visible(true)
+                isFirstTaskDone = true
             }
 
             playerText.position(player.pos)
@@ -97,12 +117,14 @@ class SnowLevel: Scene() {
                 playerText.text = "Этот завал расчищен"
                 jesus.visible = true
                 jesus.move()
+                isSecondTaskDone = true
             }
 
             if (!rectDoor2.collidesWith(secondDoorBlockingObjects)) {
                 playerText.text = "Санта свободен!"
                 santa.visible = true
                 santa.move()
+                isThirdTaskDone = true
             }
 
             if (!rectDoor3.collidesWith(thirdDoorBlockingObjects)) {
@@ -115,6 +137,7 @@ class SnowLevel: Scene() {
 
                 elf3.visible = true
                 elf3.move()
+                isFourthTaskDone = true
             }
         }
     }

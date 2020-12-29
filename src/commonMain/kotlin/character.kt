@@ -15,6 +15,7 @@ import com.soywiz.korge.view.tween.moveBy
 import com.soywiz.korim.atlas.Atlas
 import com.soywiz.korim.atlas.readAtlas
 import com.soywiz.korim.color.Colors
+import com.soywiz.korim.color.RGBA
 import com.soywiz.korio.async.launch
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
@@ -58,7 +59,7 @@ class Character(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     }
 }
 
-suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesSrc: String, text: String): Character {
+suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesSrc: String, text: String, textColor: RGBA): Character {
     val sprites = resourcesVfs[spritesSrc].readAtlas()
 
     val idleAnimation = sprites.getSpriteAnimation("idle")
@@ -72,7 +73,7 @@ suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesS
     val character = Character(idleAnimation).position(startX, startY).registerBodyWithFixture(type= BodyType.STATIC, gravityScale = 0, shape = BoxShape(2f, 2f))
     addChild(character)
 
-    val characterPhrase = text(text, textSize = 16.0, color = Colors.BLACK).visible(false)
+    val characterPhrase = text(text, textSize = 16.0, color = textColor).visible(false)
 
     characterPhrase.addUpdater {
         position(character.pos)
