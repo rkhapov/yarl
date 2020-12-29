@@ -28,9 +28,22 @@ import kotlin.math.abs
 
 class Player(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     private var hp: Int = 3
+    private var inAttack : Boolean = false;
+
+    fun doAttackState() {
+        inAttack = true
+    }
+
+    fun endAttackState() {
+        inAttack = false
+    }
+
+    fun isInAttackState() : Boolean {
+        return inAttack
+    }
 
     fun takeDamage() {
-        hp--
+        println("player hp is ${--hp}")
     }
 }
 
@@ -143,6 +156,8 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
             direction = Direction.LEFT
         }
         if (views.input.keys[Key.G]) {
+            player.doAttackState()
+
             when (direction) {
                 Direction.RIGHT -> player.playAnimation(firstAttackRightAnimation)
                 Direction.LEFT -> player.playAnimation(firstAttackLeftAnimation)
@@ -151,5 +166,10 @@ suspend fun Container.player(views: Views, startX: Int, startY: Int, tiledMapVie
             }
         }
     }
+
+    player.onAnimationCompleted {
+        player.endAttackState()
+    }
+
     return player
 }
