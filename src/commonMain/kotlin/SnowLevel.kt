@@ -136,6 +136,9 @@ class SnowLevel : Scene() {
                 elf3.move()
                 isFourthTaskDone = true
             }
+
+            if (isFirstTaskDone && isSecondTaskDone && isThirdTaskDone && isFourthTaskDone)
+                text("Чтобы продолжить кликните левой кнопкой мыши", textSize = 30.0, color = Colors.BLACK).centerOnStage()
         }
     }
 }
