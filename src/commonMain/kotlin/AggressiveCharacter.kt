@@ -9,9 +9,7 @@ import com.soywiz.korge.time.timeout
 import com.soywiz.korge.view.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korma.geom.Point
 import com.soywiz.korma.geom.PointInt
-import com.soywiz.korte.dynamic.Dynamic2.toInt
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
 import kotlin.random.Random
@@ -48,7 +46,7 @@ class AggressiveCharacter(
         lastMoveDirection = direction
     }
 
-    fun die() {
+    private fun die() {
         playAnimation(deathAnimation, spriteDisplayTime = 200.milliseconds, reversed = true)
 
         onAnimationCompleted {
@@ -113,6 +111,17 @@ class AggressiveCharacter(
             }
         }
     }
+
+    fun tryAttack(player: Player): Boolean {
+        val v = Vec2((player.x - x).toFloat(), (player.y - y).toFloat())
+
+        if (v.length() < 20) {
+            doAttack(player)
+            return true
+        }
+
+        return false
+    }
 }
 
 suspend fun Container.aggressiveCharacter(
@@ -158,19 +167,6 @@ suspend fun Container.aggressiveCharacter(
     addChild(character)
 
     character.playAnimationLooped(walkFrontAnimation, spriteDisplayTime = 200.milliseconds)
-
-    character.onCollision {
-        if (it is Player && !it.isInAttackState()) {
-            character.doAttack(it)
-        }
-    }
-
-    val otherAggressiveCharacters = ArrayList<View>()
-    forEachChildren {
-        if (it is AggressiveCharacter && it != character) {
-            otherAggressiveCharacters.add(it)
-        }
-    }
 
     addFixedUpdater(60.timesPerSecond) {
         val collisionLayer = tiledMapView.tiledMap.data.tileLayers.first()
@@ -233,6 +229,10 @@ suspend fun Container.aggressiveCharacter(
             }
 
             return emptyList()
+        }
+
+        if (character.tryAttack(player)) {
+            return@addFixedUpdater
         }
 
         val myTileX = (character.x / tileWidth).toInt()
