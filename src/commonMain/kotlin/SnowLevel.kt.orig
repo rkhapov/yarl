@@ -10,25 +10,41 @@ import com.soywiz.korio.file.std.resourcesVfs
 import org.jbox2d.dynamics.BodyType
 
 class SnowLevel: Scene() {
+    var enemiesDefeated = false
     override suspend fun Container.sceneInit() {
         val map = resourcesVfs["/snow_level/snow.tmx"].readTiledMap()
 
-<<<<<<< HEAD
         val rectDoor1 = solidRect(96, 32).position(128, 224)
         val rectDoor2 = solidRect(96, 32).position(352, 160)
         val rectDoor3 = solidRect(96, 32).position(608, 128)
         val mapView = tiledMapView(map)
 
-        val jesus = character(views, 160, 224, "jesus.xml").visible(false)
-        val santa = character(views, 384, 160, "santa.xml").visible(false)
-        val elf1 = character(views, 608, 128, "elf.xml").visible(false)
-        val elf2 = character(views, 640, 128, "elf.xml").visible(false)
-        val elf3 = character(views, 672, 128, "elf.xml").visible(false)
+        val jesus = character(views, 160, 224, "jesus.xml","Я родился").visible(false)
+        val santa = character(views, 384, 160, "santa.xml", "Йо-хо-хо, спасибо за спасение").visible(false)
+        val elf1 = character(views, 608, 128, "elf.xml", "Гномье бурчанье 1").visible(false)
+        val elf2 = character(views, 640, 128, "elf.xml", "Гномье бурчанье 2").visible(false)
+        val elf3 = character(views, 672, 128, "elf.xml", "Гномье бурчанье 3").visible(false)
 
+<<<<<<< HEAD
+        jesus.stop()
+        santa.stop()
+        elf1.stop()
+        elf2.stop()
+        elf3.stop()
+
+        character(views, 500, 500, "deer.xml", "Я олень, я не умею говорить!")
+        character(views, 50, 300, "deer.xml", "Я олень, я не умею говорить!")
+        val player = player(views, 0, 500, mapView)
+        val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player, mapView, 32, 32)
+        aggressiveCharacter(views, 400, 200, "src", player, mapView, 32, 32)
+        aggressiveCharacter(views, 300, 200, "src", player, mapView, 32, 32)
+        aggressiveCharacter(views, 200, 200, "src", player, mapView, 32, 32)
+=======
         character(views, 600, 500, "deer.xml")
         character(views, 50, 300, "deer.xml")
-        val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src")
         val player = player(views, 0, 500, mapView)
+        val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player, mapView, 32, 32)
+>>>>>>> c5e8bdde0d592c8076e2e532fa4616443c28a5ee
 
         val firstDoorBlock1 = staticObject(views, 128, 224, "gift.xml")
         val firstDoorBlock2 = staticObject(views, 160, 224, "gift.xml")
@@ -50,43 +66,68 @@ class SnowLevel: Scene() {
         timeout(3.seconds) {
             playerText.text = "Я умер?"
             timeout(2.seconds) {
-                playerText.text = "Эти зеленые вирусы не дают начаться новому году!"
-                timeout(4.seconds) {
-                    playerText.text = "Я должен их уничтожить"
+                playerText.text = "Похоже, что я на северном полюсе"
+                timeout(3.seconds) {
+                    playerText.text = "Причем в самый канун Нового года"
+                    timeout(3.seconds) {
+                        playerText.text = "Но где все? Здесь лишь зеленые штуки..."
+                        timeout(3.seconds) {
+                            playerText.text = "Может эти... вирусы стали причиной такой пустоты"
+                            timeout(4.seconds) {
+                                playerText.text = "Я думаю, стоит от них избавиться"
+                                timeout(4.seconds) {
+                                    playerText.visible(false)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
 
+        val aggressiveCharacters = ArrayList<View>()
+        forEachChildren {
+            if (it is AggressiveCharacter) {
+                aggressiveCharacters.add(it)
+            }
+        }
+
         addUpdater {
+            if (children.intersect(aggressiveCharacters).isEmpty()) {
+                playerText.text = "Теперь нужно расчистить завалы у домов"
+                playerText.visible(true)
+                timeout(3.seconds) {
+                    playerText.visible(false)
+                }
+            }
+
             playerText.position(player.pos)
+
             if (!rectDoor1.collidesWith(firstDoorBlockingObjects)) {
-//                jesus.position(160, 224)
+                playerText.text = "Этот завал расчищен"
+                playerText.visible(true)
+                timeout(2.seconds) {
+                    playerText.visible(false)
+                }
                 jesus.visible = true
+                jesus.move()
             }
 
             if (!rectDoor2.collidesWith(secondDoorBlockingObjects)) {
-//                santa.position(384, 160)
                 santa.visible = true
+                santa.move()
             }
 
             if (!rectDoor3.collidesWith(thirdDoorBlockingObjects)) {
-//                elf1.position(608, 128)
                 elf1.visible = true
+                elf1.move()
 
-//                elf2.position(640, 128)
                 elf2.visible = true
+                elf2.move()
 
-//                elf3.position(672, 128)
                 elf3.visible = true
+                elf3.move()
             }
-=======
-        camera {
-            val mapView = tiledMapView(map)
-            val player = player(views, 0, 500, mapView)
-            character(views, 600, 500, "deer.xml")
-            character(views, 50, 300, "deer.xml")
-            val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player, mapView, 32, 32)
->>>>>>> 049b46e6d344512ae7aa8098737440085decb044
         }
     }
 }
