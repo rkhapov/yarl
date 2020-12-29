@@ -26,8 +26,8 @@ class SnowLevel: Scene() {
 
         character(views, 600, 500, "deer.xml")
         character(views, 50, 300, "deer.xml")
-            val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player, mapView, 32, 32)
         val player = player(views, 0, 500, mapView)
+        val aggressiveCharacter = aggressiveCharacter(views, 600, 200, "src", player, mapView, 32, 32)
 
         val firstDoorBlock1 = staticObject(views, 128, 224, "gift.xml")
         val firstDoorBlock2 = staticObject(views, 160, 224, "gift.xml")
