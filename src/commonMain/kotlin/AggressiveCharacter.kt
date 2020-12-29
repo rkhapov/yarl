@@ -14,6 +14,7 @@ import com.soywiz.korma.geom.PointInt
 import com.soywiz.korte.dynamic.Dynamic2.toInt
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyType
+import kotlin.random.Random
 
 class AggressiveCharacter(
     idleAnimation: SpriteAnimation,
@@ -55,7 +56,7 @@ class AggressiveCharacter(
         }
     }
 
-    fun takeDamage() {
+    fun takeDamage(direction: Direction) {
         if (!canTakeDamage) {
             return
         }
@@ -65,18 +66,20 @@ class AggressiveCharacter(
             return
         }
 
-        when (lastMoveDirection) {
+        val force = 2000f
+
+        when (direction) {
             Direction.UP -> {
-                body?.applyForceToCenter(Vec2(0f, +1000f))
+                body?.applyForceToCenter(Vec2(0f, -force))
             }
             Direction.RIGHT -> {
-                body?.applyForceToCenter(Vec2(-1000f, 0f))
+                body?.applyForceToCenter(Vec2(force, 0f))
             }
             Direction.DOWN -> {
-                body?.applyForceToCenter(Vec2(0f, -1000f))
+                body?.applyForceToCenter(Vec2(0f, +force))
             }
             Direction.LEFT -> {
-                body?.applyForceToCenter(Vec2(+100f, 0f))
+                body?.applyForceToCenter(Vec2(-force, 0f))
             }
         }
 
@@ -184,18 +187,13 @@ suspend fun Container.aggressiveCharacter(
                 return
             }
 
-//            for (aggressiveCharacter in otherAggressiveCharacters) {
-//                if (aggressiveCharacter.collidesWith(character))
-//                    return
-//            }
-
             val newPoint = PointInt(x, y)
 
             if (visited.contains(newPoint)) {
                 return
             }
 
-            if (collisionLayer.map[x, y].value != 0) {
+            if (collisionLayer.map[x, y].value != 0 || Random.nextDouble() > 0.8) {
                 return
             }
 
@@ -220,10 +218,18 @@ suspend fun Container.aggressiveCharacter(
                     return path
                 }
 
-                tryGo(point.x + 1, point.y, path, Direction.RIGHT, queue, visited)
-                tryGo(point.x - 1, point.y, path, Direction.LEFT, queue, visited)
-                tryGo(point.x, point.y - 1, path, Direction.UP, queue, visited)
-                tryGo(point.x, point.y + 1, path, Direction.DOWN, queue, visited)
+                val pointsToGo = mutableListOf(
+                    Pair(PointInt(point.x + 1, point.y), Direction.RIGHT),
+                    Pair(PointInt(point.x - 1, point.y), Direction.LEFT),
+                    Pair(PointInt(point.x, point.y - 1), Direction.UP),
+                    Pair(PointInt(point.x, point.y + 1), Direction.DOWN)
+                )
+
+                pointsToGo.shuffle()
+
+                for (p in pointsToGo) {
+                    tryGo(p.first.x, p.first.y, path, p.second, queue, visited)
+                }
             }
 
             return emptyList()
