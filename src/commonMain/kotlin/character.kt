@@ -1,38 +1,19 @@
 import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
-import com.soywiz.korge.animate.animate
-import com.soywiz.korge.animate.animateParallel
-import com.soywiz.korge.animate.animator
-import com.soywiz.korge.animate.play
 import com.soywiz.korge.box2d.BoxShape
 import com.soywiz.korge.box2d.registerBodyWithFixture
-import com.soywiz.korge.input.onClick
-import com.soywiz.korge.time.TimerComponents
 import com.soywiz.korge.time.timeout
 import com.soywiz.korge.time.timers
 import com.soywiz.korge.view.*
-import com.soywiz.korge.view.tween.moveBy
-import com.soywiz.korim.atlas.Atlas
 import com.soywiz.korim.atlas.readAtlas
-import com.soywiz.korim.color.Colors
 import com.soywiz.korim.color.RGBA
-import com.soywiz.korio.async.launch
-import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
 import com.soywiz.korio.lang.Closeable
-import kotlinx.coroutines.Job
-import org.jbox2d.collision.shapes.CircleShape
 import org.jbox2d.dynamics.BodyType
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.startCoroutine
 
 class Character(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     private var canMove: Boolean = true
     private var talk: Boolean = false
-
-    fun die() {
-        removeFromParent()
-    }
 
     fun move() {
         canMove = true
@@ -59,7 +40,14 @@ class Character(idleAnimation: SpriteAnimation) : Sprite(idleAnimation) {
     }
 }
 
-suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesSrc: String, text: String, textColor: RGBA): Character {
+suspend fun Container.character(
+    views: Views,
+    startX: Int,
+    startY: Int,
+    spritesSrc: String,
+    text: String,
+    textColor: RGBA
+): Character {
     val sprites = resourcesVfs[spritesSrc].readAtlas()
 
     val idleAnimation = sprites.getSpriteAnimation("idle")
@@ -68,9 +56,16 @@ suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesS
     val walkUpAnimation = sprites.getSpriteAnimation("walk-up")
     val walkDownAnimation = sprites.getSpriteAnimation("walk-down")
 
-    val animations = listOf<SpriteAnimation>(idleAnimation, walkRightAnimation, walkLeftAnimation, walkDownAnimation, walkUpAnimation)
+    val animations = listOf<SpriteAnimation>(
+        idleAnimation,
+        walkRightAnimation,
+        walkLeftAnimation,
+        walkDownAnimation,
+        walkUpAnimation
+    )
 
-    val character = Character(idleAnimation).position(startX, startY).registerBodyWithFixture(type= BodyType.STATIC, gravityScale = 0, shape = BoxShape(2f, 2f))
+    val character = Character(idleAnimation).position(startX, startY)
+        .registerBodyWithFixture(type = BodyType.STATIC, gravityScale = 0, shape = BoxShape(2f, 2f))
     addChild(character)
 
     val characterPhrase = text(text, textSize = 16.0, color = textColor).visible(false)
@@ -87,17 +82,14 @@ suspend fun Container.character(views: Views, startX: Int, startY: Int, spritesS
     }
 
     fun doActionInInterval(action: () -> Unit): Closeable {
-        val timer = timers.interval(200.milliseconds) {action()}
-
-        return timer
+        return timers.interval(200.milliseconds) { action() }
     }
 
-    var action = doActionInInterval {  }
+    var action = doActionInInterval { }
 
     fun move() {
         if (character.canMove()) {
-            val animationToPlay = animations.random()
-            when(animationToPlay) {
+            when (animations.random()) {
                 idleAnimation -> {
                     action.close()
                     character.playAnimationLooped(idleAnimation)

@@ -11,7 +11,8 @@ suspend fun Container.staticObject(views: Views, startX: Int, startY: Int, sprit
     val sprites = resourcesVfs[spriteSrc].readAtlas()
     val animation = sprites.getSpriteAnimation("idle")
 
-    val staticObject = StaticObject(animation).position(startX, startY).registerBodyWithFixture(type = BodyType.DYNAMIC, gravityScale = 0, friction = 20f, bullet = true)
+    val staticObject = StaticObject(animation).position(startX, startY)
+        .registerBodyWithFixture(type = BodyType.DYNAMIC, gravityScale = 0, friction = 20f, bullet = true)
     addChild(staticObject)
 
     return staticObject
