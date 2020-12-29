@@ -1,10 +1,4 @@
-import com.soywiz.klock.infiniteTimes
 import com.soywiz.klock.seconds
-import com.soywiz.korau.sound.PlaybackTimes
-import com.soywiz.korau.sound.await
-import com.soywiz.korau.sound.readMusic
-import com.soywiz.korau.sound.readSound
-import com.soywiz.korge.box2d.registerBodyWithFixture
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.tiled.readTiledMap
@@ -13,23 +7,23 @@ import com.soywiz.korge.time.timeout
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korio.file.std.resourcesVfs
-import org.jbox2d.dynamics.BodyType
 
-class SnowLevel: Scene() {
+class SnowLevel : Scene() {
     var enemiesDefeated = false
     override suspend fun Container.sceneInit() {
         val map = resourcesVfs["/snow_level/snow.tmx"].readTiledMap()
-        val musicChannel = playMusic("Jingle Bells1.mp3")
-        musicChannel.pause()
-        musicChannel.resume()
+//        val musicChannel = playMusic("Jingle Bells1.mp3")
+//        musicChannel.pause()
+//        musicChannel.resume()
 
         val rectDoor1 = solidRect(96, 32).position(128, 224)
         val rectDoor2 = solidRect(96, 32).position(352, 160)
         val rectDoor3 = solidRect(96, 32).position(608, 128)
         val mapView = tiledMapView(map)
 
-        val jesus = character(views, 160, 224, "jesus.xml","Я родился", Colors.BLACK).visible(false)
-        val santa = character(views, 384, 160, "santa.xml", "Йо-хо-хо, спасибо за спасение", Colors.BLACK).visible(false)
+        val jesus = character(views, 160, 224, "jesus.xml", "Я родился", Colors.BLACK).visible(false)
+        val santa =
+            character(views, 384, 160, "santa.xml", "Йо-хо-хо, спасибо за спасение", Colors.BLACK).visible(false)
         val elf1 = character(views, 608, 128, "elf.xml", "Гномье бурчанье 1", Colors.BLACK).visible(false)
         val elf2 = character(views, 640, 128, "elf.xml", "Гномье бурчанье 2", Colors.BLACK).visible(false)
         val elf3 = character(views, 672, 128, "elf.xml", "Гномье бурчанье 3", Colors.BLACK).visible(false)
@@ -101,7 +95,7 @@ class SnowLevel: Scene() {
 
         onClick {
             if (isFirstTaskDone && isSecondTaskDone && isThirdTaskDone && isFourthTaskDone)
-                    sceneContainer.changeTo<FinalLevel>()
+                sceneContainer.changeTo<FinalLevel>()
         }
 
         addUpdater {

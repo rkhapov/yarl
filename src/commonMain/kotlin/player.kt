@@ -129,7 +129,8 @@ suspend fun Container.player(
                     +(player.height / 4),
                     tileWidth,
                     tileHeight
-                )) {
+                )
+            ) {
                 player.y--
             }
             direction = Direction.UP
@@ -144,7 +145,8 @@ suspend fun Container.player(
                     player.height / 2 + 1,
                     tileWidth,
                     tileHeight
-                )) {
+                )
+            ) {
                 player.y++
             }
             direction = Direction.DOWN
@@ -159,7 +161,8 @@ suspend fun Container.player(
                     player.height / 2,
                     tileWidth,
                     tileHeight
-                )) {
+                )
+            ) {
                 player.x--
             }
             direction = Direction.LEFT

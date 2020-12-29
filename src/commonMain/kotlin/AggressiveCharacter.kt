@@ -231,6 +231,10 @@ suspend fun Container.aggressiveCharacter(
             return emptyList()
         }
 
+        if (character.x < 0 || character.y < 0 || character.x >= getGlobalBounds().width || character.y >= getGlobalBounds().height) {
+            character.removeFromParent()
+        }
+
         if (character.tryAttack(player)) {
             return@addFixedUpdater
         }
